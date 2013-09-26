@@ -76,3 +76,6 @@ rm -rf /jail/zoobar/db
 python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
 
+chown -R 61012:61012 /jail/zoobar/db
+chmod -R 770 /jail/zoobar/db
+
