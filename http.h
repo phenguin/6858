@@ -5,6 +5,9 @@
 #include <sys/types.h>
 #include <stddef.h>
 
+#define DYNAMIC_ONLY 0
+#define STATIC_ONLY 1
+
 /** Read the request line like "GET /xxx HTTP/1.0".
  *  \return Error message, or NULL if succeed.
  */
@@ -20,6 +23,8 @@ void http_err(int fd, int code, char *fmt, ...);
 
 /** Dispatcher for generating an HTTP response. */
 void http_serve(int fd, const char *);
+
+void http_serve_only(int fd, const char *, int dynamic_or_static);
 
 void http_serve_none(int fd, const char *);
 

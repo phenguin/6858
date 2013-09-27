@@ -15,6 +15,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#define DYNAMIC_ONLY 0
+#define STATIC_ONLY 1
+
 void touch(const char *name) {
     if (access("/tmp/grading", F_OK) < 0)
         return;
@@ -296,6 +299,38 @@ void http_serve(int fd, const char *name)
     handler(fd, pn);
 }
 
+void http_serve_only(int fd, const char *name, int static_or_dynamic)
+{
+    void (*handler)(int, const char *) = http_serve_none;
+    char pn[1024];
+    struct stat st;
+
+    getcwd(pn, sizeof(pn));
+    setenv("DOCUMENT_ROOT", pn, 1);
+
+    strcat(pn, name);
+    split_path(pn);
+
+    if (!stat(pn, &st))
+    {
+        if (static_or_dynamic == STATIC_ONLY) { 
+            if (S_ISDIR(st.st_mode))
+                handler = http_serve_directory;
+            else
+                handler = http_serve_file;
+        } else if (static_or_dynamic == DYNAMIC_ONLY) {
+            if (valid_cgi_script(&st)) {
+                handler = http_serve_executable;
+            } else {
+                http_err(fd, 404, "Invalid request");
+                return;
+            }
+        }
+
+    }
+
+    handler(fd, pn);
+}
 void http_serve_none(int fd, const char *pn)
 {
     http_err(fd, 404, "File does not exist: %s", pn);

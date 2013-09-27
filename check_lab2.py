@@ -164,7 +164,7 @@ def check_exec(svc, allowed):
     config.readfp(data)
     
     if not config.has_section(svc):
-        log(red("FAIL"), "Exercise 4:", "%s missing from zook.conf")
+        log(red("FAIL"), "Exercise 4:", "%s missing from zook.conf" % svc)
         return False
     if not config.has_option(svc, "args"):
         log(red("FAIL"), "Exercise 4:", "%s has no args in zook.conf" % svc)

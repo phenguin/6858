@@ -2,12 +2,12 @@ ASFLAGS := -m32
 CFLAGS  := -m32 -g -std=c99 -Wall -Werror -D_GNU_SOURCE
 LDFLAGS := -m32
 LDLIBS  := -lcrypto
-PROGS   := zookld zookfs zookd
+PROGS   := zookld zookfs zookd zookfs_static zookfs_dynamic
 
 all: $(PROGS)
 .PHONY: all
 
-zookld zookd zookfs: %: %.o http.o
+zookld zookd zookfs zookfs_static zookfs_dynamic: %: %.o http.o
 
 
 .PHONY: check

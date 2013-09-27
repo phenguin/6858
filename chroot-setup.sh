@@ -28,7 +28,8 @@ mkdir -p /jail
 cp -p index.html /jail
 
 ./chroot-copy.sh zookd /jail
-./chroot-copy.sh zookfs /jail
+./chroot-copy.sh zookfs_static /jail
+./chroot-copy.sh zookfs_dynamic /jail
 
 #./chroot-copy.sh /bin/bash /jail
 
