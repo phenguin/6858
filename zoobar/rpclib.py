@@ -3,34 +3,29 @@ import sys
 import socket
 import stat
 import errno
+import json
 from debug import *
 
 def parse_req(req):
-    words = req.split(' ')
-    method = words[0]
-    args = words[1:]
-    kwargs = {}
-    for arg in words[1:]:
-        (name, _, val) = arg.partition('=')
-        kwargs[unicode(name)] = unicode(val)
-    return (method, kwargs)
+    req_dict = json.loads(req)
+    return (req_dict['method'], req_dict['kwargs'])
 
 def format_req(method, kwargs):
-    return '%s %s' % (method,
-                      ' '.join(['%s=%s' % (k, v)
-                                for (k, v) in kwargs.items()]))
+    req_dict = { "method" : method, "kwargs" : kwargs }
+    return json.dumps(req_dict)
 
 def parse_resp(resp):
-    return resp
+    return json.loads(resp)
 
 def format_resp(resp):
-    return resp
+    return json.dumps(resp)
 
 def buffered_readlines(sock):
     buf = ''
     while True:
         while '\n' in buf:
             (line, nl, buf) = buf.partition('\n')
+            log("Line: %s" % (line,))
             yield line
         try:
             newdata = sock.recv(4096)
@@ -45,6 +40,7 @@ class RpcServer(object):
     def run_sock(self, sock):
         lines = buffered_readlines(sock)
         for req in lines:
+            log("req: %r" % (req,))
             (method, kwargs) = parse_req(req)
             m = self.__getattribute__('rpc_' + method)
             ret = m(**kwargs)
@@ -84,6 +80,8 @@ class RpcClient(object):
         self.lines = buffered_readlines(sock)
 
     def call(self, method, **kwargs):
+        log("method: %r" % (method, ))
+        log("kwargs: %r" % (kwargs, ))
         self.sock.sendall(format_req(method, kwargs) + '\n')
         return parse_resp(self.lines.next())
 

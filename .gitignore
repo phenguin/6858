@@ -16,3 +16,5 @@
 zoobar/db/
 tags
 *.swp
+zookfs_dynamic
+zookfs_static

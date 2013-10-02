@@ -78,5 +78,7 @@ python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
 
 chown -R 61012:61012 /jail/zoobar/db
+chown -R 0:61012 /jail/zoobar/index.cgi
 chmod -R 770 /jail/zoobar/db
+# find /jail/zoobar/db -type f -print | xargs chmod 660
 
