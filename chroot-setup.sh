@@ -64,6 +64,7 @@ mkdir -p /jail/usr/share/zoneinfo
 cp -r /usr/share/zoneinfo/America /jail/usr/share/zoneinfo/
 
 create_socket_dir /jail/echosvc 61010:61010 755
+create_socket_dir /jail/authsvc 61014:61014 755
 
 mkdir -p /jail/tmp
 chmod a+rwxt /jail/tmp
@@ -76,9 +77,12 @@ rm -rf /jail/zoobar/db
 
 python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
+python /jail/zoobar/zoodb.py init-cred
 
 chown -R 61012:61012 /jail/zoobar/db
+chown -R 61014:61014 /jail/zoobar/db/cred
 chown -R 0:61012 /jail/zoobar/index.cgi
 chmod -R 770 /jail/zoobar/db
+chmod -R 700 /jail/zoobar/db/cred
 # find /jail/zoobar/db -type f -print | xargs chmod 660
 
