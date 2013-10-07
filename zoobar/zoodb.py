@@ -11,8 +11,9 @@ CredBase = declarative_base()
 class Cred(CredBase):
     __tablename__  = "cred"
     username = Column(String(128), primary_key=True)
-    password = Column(String(128))
+    password = Column(Binary)
     token = Column(String(128))
+    salt = Column(Integer)
 
 class Person(PersonBase):
     __tablename__ = "person"
