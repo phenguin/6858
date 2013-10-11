@@ -4,6 +4,8 @@ from debug import *
 import time
 
 def transfer(sender, recipient, zoobars):
+    if sender == recipient:
+        raise ValueError("Cannot make transfer to yourself")
     bankdb = bank_setup()
     senderp = bankdb.query(Bank).get(sender)
     recipientp = bankdb.query(Bank).get(recipient)

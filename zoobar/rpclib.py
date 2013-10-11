@@ -6,6 +6,14 @@ import errno
 import json
 from debug import *
 
+_allowed_exceptions = {
+        'ValueError' : ValueError,
+        'AttributeError' : AttributeError,
+        'TypeError' : TypeError,
+        'KeyError' : KeyError,
+        'IndexError' : IndexError
+        }
+
 def parse_req(req):
     req_dict = json.loads(req)
     return (req_dict['method'], req_dict['kwargs'])
@@ -15,7 +23,22 @@ def format_req(method, kwargs):
     return json.dumps(req_dict)
 
 def parse_resp(resp):
-    return json.loads(resp)
+    resp = json.loads(resp)
+    status = resp.get("status")
+
+    if status == "success":
+        return resp.get("result")
+    elif status == "exception":
+        try:
+            exception_type = resp['exception_type']
+            message = resp.get('message', "")
+        except KeyError:
+            raise Exception("Rpc protocol error (1)")
+
+        e_class = _allowed_exceptions.get(exception_type, Exception)
+        raise e_class(message)
+    else:
+        raise Exception("Rpc protocol error (2)")
 
 def format_resp(resp):
     return json.dumps(resp)
@@ -43,7 +66,18 @@ class RpcServer(object):
             log("req: %r" % (req,))
             (method, kwargs) = parse_req(req)
             m = self.__getattribute__('rpc_' + method)
-            ret = m(**kwargs)
+
+            ret = {}
+            try:
+                ret_val = m(**kwargs)
+            except Exception as e:
+                ret["status"] = "exception"
+                ret["exception_type"] = e.__class__.__name__
+                ret["message"] = e.message
+            else:
+                ret["status"] = "success"
+                ret["result"] = ret_val
+
             sock.sendall(format_resp(ret) + '\n')
 
     def run_sockpath_fork(self, sockpath):
