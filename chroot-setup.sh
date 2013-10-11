@@ -86,6 +86,7 @@ chown -R 61014:61014 /jail/zoobar/db/cred
 chown -R 61015:61015 /jail/zoobar/db/bank
 chown -R 61015:61015 /jail/zoobar/db/transfer
 chown -R 0:61012 /jail/zoobar/index.cgi
+chmod -R 750 /jail/zoobar/index.cgi
 chmod -R 770 /jail/zoobar/db
 chmod -R 700 /jail/zoobar/db/cred
 chmod -R 700 /jail/zoobar/db/bank

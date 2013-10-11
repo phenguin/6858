@@ -15,7 +15,9 @@ def transfer():
             zoobars = int(request.form['zoobars'])
             print "DSADSADSA"
             bank_client.transfer(g.user.person.username,
-                          request.form['recipient'], zoobars)
+                          request.form['recipient'],
+                          zoobars, 
+                          g.user.token)
             warning = "Sent %d zoobars" % zoobars
     except (KeyError, ValueError, AttributeError) as e:
         traceback.print_exc()
