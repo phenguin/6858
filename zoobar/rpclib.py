@@ -36,6 +36,7 @@ def parse_resp(resp):
             raise Exception("Rpc protocol error (1)")
 
         e_class = _allowed_exceptions.get(exception_type, Exception)
+        log(resp.get('stack_trace'))
         raise e_class(message)
     else:
         raise Exception("Rpc protocol error (2)")
@@ -74,6 +75,7 @@ class RpcServer(object):
                 ret["status"] = "exception"
                 ret["exception_type"] = e.__class__.__name__
                 ret["message"] = e.message
+                ret["stack_trace"] = traceback.format_exc()
             else:
                 ret["status"] = "success"
                 ret["result"] = ret_val

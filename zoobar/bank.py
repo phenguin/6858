@@ -9,6 +9,9 @@ def transfer(sender, recipient, zoobars, sender_token):
     if sender == recipient:
         raise ValueError("Cannot make transfer to yourself")
 
+    if zoobars <= 0:
+        raise ValueError("Transfer amount must be greater than 0")
+
     if not auth_client.check_token(sender, sender_token):
         raise Exception("Invalid token for user: %s" % (sender,))
 
