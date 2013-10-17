@@ -19,5 +19,5 @@ def init_user_balance(username):
 
 def get_log(username):
     with rpclib.client_connect('/banksvc/sock') as c:
-        return iter(c.call('get_log', username=username))
+        return c.call('get_log', username=username)
 

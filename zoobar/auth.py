@@ -30,10 +30,10 @@ def cred_for_person(person):
     return db.query(Cred).get(person.username)
 
 def newtoken(db, cred):
-    hashinput = "%s%s" % (cred.username, gen_token(length = 15))
-    cred.token = token_hash(hashinput)
+    token = "%s%s" % (cred.username, gen_token(length = 15))
+    cred.token = token
     db.commit()
-    return hashinput
+    return token
 
 def login(username, password):
     db = cred_setup()
@@ -71,7 +71,7 @@ def register(username, password):
 def check_token(username, token):
     db = cred_setup()
     cred = db.query(Cred).get(username)
-    if cred and cred.token == token_hash(token):
+    if cred and cred.token == token:
         return True
     else:
         return False

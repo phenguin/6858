@@ -84,7 +84,6 @@ python /jail/zoobar/zoodb.py init-bank
 
 chown 0:0 /jail/zoobar/test-init.py
 chmod 700 /jail/zoobar/test-init.py
-python /jail/zoobar/test-init.py
 
 chown -R 61012:61012 /jail/zoobar/db
 chown -R 61014:61014 /jail/zoobar/db/cred
