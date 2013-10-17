@@ -13,3 +13,8 @@
 /zooksvc
 /run-shellcode
 /submit.key
+zoobar/db/
+tags
+*.swp
+zookfs_dynamic
+zookfs_static
